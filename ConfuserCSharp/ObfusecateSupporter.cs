@@ -28,7 +28,7 @@ namespace ConfuserCSharp
             "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
             "true", "try", "typeof", "unit", "ulong", "unchecked", "unsafe", "ushort", "using", "virtual",
             "volatile", "void", "while", "add", "dynamic", "get", "partial", "remove", "set", "value", "var",
-            "where", "yield", "when"
+            "where", "yield", "when", "Main"
         };
 
         public static readonly HashSet<string> DefaultType = new HashSet<string>()
@@ -36,7 +36,7 @@ namespace ConfuserCSharp
             "char", "char[]", "int", "int[]", "string", "string[]", "float", "float[]", "double", "double[]",
             "decimal", "decimal[]", "byte", "byte[]", "uint", "uint[]", "short", "short[]", "ushort", "struct",
             "object", "object[]", "enum", "event", "long", "long[]", "ulong", "ulong[]", "List", "List<", "HashSet", "Dictionary", 
-            "var", "in", "class"
+            "var", "in", "class", "void"
         };
 
         private static readonly HashSet<string> NotIdentifiers = new HashSet<string>()
@@ -54,14 +54,14 @@ namespace ConfuserCSharp
             "Fortress", "Golf", "George", "Government", "Hotel", "Home", "House", "India", "Imperial", "Internet", "Juliet", 
             "Juice", "Kilo", "Kiss", "King", "Lima", "Lava", "Leo", "Mike", "Milk", "Moon", "November", "Neo", "NitroCell", "Oscar",
             "Octopus", "Papa", "Pudding", "Phoenix", "Quebec", "Queen", "Queue", "Romeo", "Room", "Sierra", "Siege", "Six", "Tango",
-            "Tortue", "Toe", "Uniform", "Universe", "Usage", "Victor", "Vector", "Virus", "Whiskey", "Winter", "X-ray", "Yankee", "Yawn",
+            "Tortue", "Toe", "Uniform", "Universe", "Usage", "Victor", "Vector", "Virus", "Whiskey", "Winter", "X_ray", "Yankee", "Yawn",
             "Zulu", "Zoo", "Zack"
         };
 
         /// <summary>
         /// 動詞リスト
         /// </summary>
-        private static readonly List <string> Verb = new List<string>()
+        private static readonly List<string> Verb = new List<string>()
         {
             "Do", "Run", "Occur", "Please", "Write", "Jump", "Hop", "Print", "Move", "Use", "Yell"
         };
@@ -129,9 +129,8 @@ namespace ConfuserCSharp
             return namespaceName;
         }
 
-        public static List<string> GetIdentifer(string[] programLine, List<string> ClassNames)
+        public static List<string> GetIdentifer(string[] programLine, List<string> ClassNames, List<string> IdentiferList)
         {
-            var IdentiferList = new List<string>();
             string type = "null";
             string identifier;
             foreach (var line in programLine)
@@ -157,17 +156,19 @@ namespace ConfuserCSharp
                                 && typeIndex != -1
                                 && !ObfusecateSupporter.NotIdentifiers.Contains(identifier)
                                 && identifier.IndexOf("\"") == -1
-                                && type.IndexOf("Dictionary") == -1)
+                                && type.IndexOf("Dictionary") == -1
+                                && !reservedWords.Contains(identifier))
                             {
                                 //Console.WriteLine(identifier);
                                 IdentiferList.Add(identifier);
                             }
                             else if(type != "null"
-                                && token.Length > typeIndex + 1
+                                && token.Length > typeIndex + 2
                                 && typeIndex != -1
                                 && !ObfusecateSupporter.NotIdentifiers.Contains(identifier)
                                 && identifier.IndexOf("\"") == -1
-                                && type.IndexOf("Dictionary") != -1)
+                                && type.IndexOf("Dictionary") != -1
+                                && !reservedWords.Contains(identifier))
                             {
                                 IdentiferList.Add(token[typeIndex + 2]);
                             }

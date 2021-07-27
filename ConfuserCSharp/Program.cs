@@ -38,13 +38,20 @@ namespace ConfuserCSharp
             var l = new List<string>();
             var d = new Dictionary<string, string>();
             var pro = File.ReadAllLines("../../../" + "FileOperater.cs");
-            l = ObfusecateSupporter.GetIdentifer(pro, clist);
+            foreach (var pr in list)
+            {
+                var program = File.ReadAllLines("../../../" + pr);
+                l = ObfusecateSupporter.GetIdentifer(program, clist, l);
+            }
             d = ObfusecateSupporter.GetObfuseCatedIdentifierDictionary(l);
             foreach (var item in d)
             {
                 Console.WriteLine(item.Key + "         " + item.Value);
             }
-            FileOperater.WriteObfusecateCodes("FileOperater.cs", d);
+            foreach (var item in list)
+            {
+                FileOperater.WriteObfusecateCodes(item, d);
+            }
 
         }
     }
